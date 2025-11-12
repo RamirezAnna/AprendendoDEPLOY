@@ -3,7 +3,7 @@
 Este repositório contém uma página de cadastro (frontend) e um backend de exemplo (Node/Express + Mongoose) configurado para conectar ao MongoDB Atlas.
 
 Estrutura relevante
-- `public/signup.html` — página de cadastro servida como arquivo estático no Vercel (mapeada via rewrites no `vercel.json`).
+ - `index.html` — página de cadastro na raiz; servida automaticamente como home no Vercel.
 - `server.js` — backend; expõe `POST /api/signup` e serve o frontend em `public/`.
 	- Observação: no Vercel, o `server.js` não é usado; a API roda em `api/` (serverless). O `server.js` é útil apenas para rodar localmente.
 - `api/signup.js` — função serverless do Vercel para cadastro de usuários.
@@ -28,7 +28,7 @@ npm run dev
 
 4. Abra no navegador:
 
-- Frontend: http://localhost:3000/signup.html (ou apenas http://localhost:3000)
+- Frontend: http://localhost:3000/ (index.html)
 - Endpoint de API: POST http://localhost:3000/api/signup
 
 No Vercel
@@ -36,7 +36,7 @@ No Vercel
 - Após o deploy, teste:
 	- GET https://seu-projeto.vercel.app/api/health → deve responder `{ ok: true }`.
 	- POST https://seu-projeto.vercel.app/api/signup com JSON `{ nome, email, senha }`.
-	- A home `/` e `/signup.html` são reescritas para `/public/signup.html` conforme `vercel.json`.
+	- A home `/` renderiza o `index.html` da raiz.
 
 Notas de segurança
 - As senhas são hasheadas com `bcrypt` (saltRounds = 10) antes de serem salvas. Ainda assim, em produção considere práticas adicionais: TLS/HTTPS, políticas de senha, verificação por e-mail, proteção contra brute-force (rate-limiting), etc.

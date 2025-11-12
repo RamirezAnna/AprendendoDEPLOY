@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cadastro — Criar Conta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#6145ff; /* fundo teal, inspirado na imagem */
+      --card:#ffffff;
+      --muted:#7a7a7a;
+      --accent:#4a4a4a;
+      --primary:#222;
+      --shadow:0 10px 30px rgba(0,0,0,0.18);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:linear-gradient(180deg,#0f7f84 0%, #118a8f 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+    }
+
+    .card{
+      width:100%;
+      max-width:560px;
+      background:var(--card);
+      border-radius:12px;
+      padding:38px 46px;
+      box-shadow:var(--shadow);
+      border:3px solid rgba(255,255,255,0.08);
+    }
+
+    header{display:flex;flex-direction:column;align-items:center;margin-bottom:18px}
+    header h1{
+      margin:0;
+      font-size:24px;
+      letter-spacing:1px;
+      color:var(--primary);
+      font-weight:700;
+    }
+    header p{margin:8px 0 0;color:var(--muted);font-size:14px}
+
+    form{display:grid;grid-template-columns:1fr;gap:16px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+
+    .input{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:#fbfbfb;
+      border:1px solid rgba(0,0,0,0.08);
+      padding:10px 12px;
+      border-radius:8px;
+    }
+    .input input{
+      border:0;background:transparent;outline:none;font-size:15px;color:#111;width:100%;
+    }
+    .input svg{width:18px;height:18px;opacity:0.55}
+
+    .actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+    .muted-link{color:var(--muted);text-decoration:none;font-size:14px}
+
+    .btn{
+      background:linear-gradient(180deg,#555 0%, #3d3d3d 100%);
+      color:white;border:0;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600;box-shadow:0 6px 16px rgba(0,0,0,0.18)
+    }
+    .btn:active{transform:translateY(1px)}
+
+    .small{font-size:13px;color:var(--muted)}
+
+    .show-pass{background:none;border:0;color:var(--muted);cursor:pointer;padding:6px;border-radius:6px}
+
+    @media (max-width:560px){
+      .card{padding:24px}
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="main">
+    <header>
+      <h1>Criar Conta</h1>
+      <p>Preencha seus dados para criar uma nova conta</p>
+    </header>
+
+    <form id="signup" novalidate>
+      <div>
+        <label for="nome">Nome</label>
+        <div class="input">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zM3 20.5c0-2.485 4.03-4.5 9-4.5s9 2.015 9 4.5V22H3v-1.5z" fill="#222"/></svg>
+          <input id="nome" name="nome" type="text" placeholder="Seu nome completo" required>
+        </div>
+      </div>
+
+      <div>
+        <label for="email">Email</label>
+        <div class="input">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 6.5A2.5 2.5 0 014.5 4h15A2.5 2.5 0 0122 6.5v11A2.5 2.5 0 0119.5 20h-15A2.5 2.5 0 012 17.5v-11zM4.5 6L12 11l7.5-5" stroke="#222" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input id="email" name="email" type="email" placeholder="seu@email.com" required>
+        </div>
+      </div>
+
+      <div>
+        <label for="senha">Senha</label>
+        <div class="input">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 11V8a5 5 0 00-10 0v3" stroke="#222" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="11" width="18" height="10" rx="2" stroke="#222" stroke-width="0.9"/></svg>
+          <input id="senha" name="senha" type="password" placeholder="Crie uma senha" minlength="6" required>
+          <button type="button" class="show-pass" id="togglePass" aria-label="Mostrar senha">Mostrar</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="muted-link" href="#">Já tem conta? Entrar</a>
+        <button class="btn" id="submitBtn" type="submit">Criar conta</button>
+      </div>
+
+      <div id="status" aria-live="polite" style="margin-top:12px;font-size:14px;color:#444"></div>
+
+      <p class="small" style="margin-top:12px">Ao criar uma conta, você concorda com os <a href="#">Termos de uso</a> e a <a href="#">Política de Privacidade</a>.</p>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('signup');
+    const toggle = document.getElementById('togglePass');
+    const pass = document.getElementById('senha');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusEl = document.getElementById('status');
+
+    toggle.addEventListener('click', () => {
+      if (pass.type === 'password') { pass.type = 'text'; toggle.textContent = 'Ocultar'; }
+      else { pass.type = 'password'; toggle.textContent = 'Mostrar'; }
+    });
+
+    function setStatus(text, isError = false) {
+      statusEl.textContent = text;
+      statusEl.style.color = isError ? '#b00020' : '#2a7a2a';
+    }
+
+    async function submitForm(payload) {
+      const url = '/api/signup';
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      return res;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusEl.textContent = '';
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const payload = {
+        nome: form.nome.value.trim(),
+        email: form.email.value.trim(),
+        senha: form.senha.value
+      };
+
+      // UI: loading state
+      submitBtn.disabled = true;
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.textContent = 'Enviando...';
+
+      try {
+        const res = await submitForm(payload);
+        const json = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          setStatus('Conta criada com sucesso! Redirecionando...', false);
+          // reset form
+          form.reset();
+          toggle.textContent = 'Mostrar';
+          pass.type = 'password';
+
+          // opcional: redirecionar após 1.5s
+          setTimeout(() => {
+            setStatus('');
+            // window.location.href = '/login.html'; // descomente se tiver página de login
+          }, 1500);
+        } else {
+          const message = json && json.error ? json.error : (json.message || 'Erro ao criar conta');
+          setStatus(message, true);
+        }
+      } catch (err) {
+        console.error(err);
+        setStatus('Não foi possível conectar ao servidor. Verifique se o backend está rodando.', true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+    });
+  </script>
+</body>
+</html>
