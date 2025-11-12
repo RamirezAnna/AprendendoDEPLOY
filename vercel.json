@@ -1,7 +1,6 @@
 {
-  "version": 2,
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/", "dest": "/signup.html" }
+  "rewrites": [
+    { "source": "/", "destination": "/public/signup.html" },
+    { "source": "/signup.html", "destination": "/public/signup.html" }
   ]
 }
