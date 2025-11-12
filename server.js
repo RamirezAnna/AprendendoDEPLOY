@@ -10,6 +10,8 @@ const MONGO_URI = process.env.MONGO_URI;
 
 app.use(cors());
 app.use(express.json());
+// Servir arquivos estáticos localmente (para abrir / no navegador)
+app.use(express.static(__dirname));
 
 // Model
 const User = require('./models/User');
@@ -42,7 +44,8 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
-app.get('/', (req, res) => res.json({ ok: true }));
+// Fallback para index.html (rota raiz/local)
+app.get('/', (req, res) => res.sendFile(require('path').join(__dirname, 'index.html')));
 
 // Evita iniciar o servidor quando a plataforma (ex.: Vercel) usar funções serverless
 if (require.main === module) {

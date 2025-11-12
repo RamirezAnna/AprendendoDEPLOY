@@ -1,44 +1,45 @@
 # AprendendoDEPLOY — Cadastro com MongoDB Atlas
 
-Este repositório contém uma página de cadastro (frontend) e um backend de exemplo (Node/Express + Mongoose) configurado para conectar ao MongoDB Atlas.
+Este repositório contém uma página de cadastro (frontend) e uma API (Node/Express/Mongoose) pronta para MongoDB Atlas. Em produção (Vercel) usamos funções serverless na pasta `api/` e servimos o `index.html` da raiz como página inicial.
 
-Estrutura relevante
- - `index.html` — página de cadastro na raiz; servida automaticamente como home no Vercel.
-- `server.js` — backend; expõe `POST /api/signup` e serve o frontend em `public/`.
-	- Observação: no Vercel, o `server.js` não é usado; a API roda em `api/` (serverless). O `server.js` é útil apenas para rodar localmente.
-- `api/signup.js` — função serverless do Vercel para cadastro de usuários.
-- `api/health.js` — função serverless simples para verificação (GET /api/health).
-- `models/User.js` — modelo Mongoose para usuários.
-- `.env.example` — modelo para variáveis de ambiente (MONGO_URI, PORT).
-- `package.json` — dependências (inclui `bcrypt` para hashing de senhas).
+Principais arquivos
+- `index.html` — página de cadastro na raiz; servida em `/` no Vercel e também localmente.
+- `api/signup.js` — função serverless de cadastro.
+- `api/health.js` — função serverless de verificação rápida (GET `/api/health`).
+- `models/User.js` — modelo Mongoose (evita OverwriteModelError em serverless com `mongoose.models`).
+- `server.js` — servidor local de desenvolvimento (não usado pelo Vercel).
+- `.env.example` — exemplo de variáveis (`MONGO_URI`, `PORT`).
+- `package.json` — dependências e scripts (inclui `vercel-build` para evitar detecção de Next.js).
 
-Como usar localmente
-1. Copie `.env.example` para `.env` e preencha `MONGO_URI` com sua connection string do MongoDB Atlas.
-2. Instale dependências:
+Rodando localmente
+1) Crie `.env` a partir de `.env.example` e preencha `MONGO_URI` (string do MongoDB Atlas).
+2) Instale as dependências:
 
 ```powershell
 npm install
 ```
 
-3. Inicie o servidor:
+3) Inicie o servidor local (porta 3000):
 
 ```powershell
 npm run dev
 ```
 
-4. Abra no navegador:
+4) Acesse:
+- Página: http://localhost:3000/
+- API: POST http://localhost:3000/api/signup (JSON: `{ nome, email, senha }`)
+- Saúde: GET http://localhost:3000/api/health
 
-- Frontend: http://localhost:3000/ (index.html)
-- Endpoint de API: POST http://localhost:3000/api/signup
-
-No Vercel
-- Configure em Project > Settings > Environment Variables a variável `MONGO_URI` (Production e Preview, se desejar).
-- Após o deploy, teste:
-	- GET https://seu-projeto.vercel.app/api/health → deve responder `{ ok: true }`.
-	- POST https://seu-projeto.vercel.app/api/signup com JSON `{ nome, email, senha }`.
-	- A home `/` renderiza o `index.html` da raiz.
+Deploy no Vercel
+- Variáveis: adicione `MONGO_URI` em Project → Settings → Environment Variables (Production e Preview, se necessário).
+- Root Directory: mantenha `/` (raiz do repositório).
+- Framework: o `vercel.json` já define `framework: null`. Não é Next.js. A build é pulada via script `vercel-build`.
+- Após publicar, valide:
+  - GET https://seu-projeto.vercel.app/api/health → `{ ok: true }`.
+  - POST https://seu-projeto.vercel.app/api/signup com `{ nome, email, senha }`.
+  - `/` deve mostrar o `index.html`.
 
 Notas de segurança
-- As senhas são hasheadas com `bcrypt` (saltRounds = 10) antes de serem salvas. Ainda assim, em produção considere práticas adicionais: TLS/HTTPS, políticas de senha, verificação por e-mail, proteção contra brute-force (rate-limiting), etc.
+- Senhas são hasheadas com `bcrypt` (saltRounds = 10). Recomenda-se adicionar HTTPS, políticas de senha, verificação de e-mail e rate limiting para produção.
 
-Se quiser que eu adicione autenticação (login + JWT), verificação por e-mail, ou testes automatizados, diga qual e eu implemento em seguida.
+Deseja adicionar login/JWT, confirmação de e-mail ou testes automatizados? Abra uma issue ou peça aqui que eu implemento.
